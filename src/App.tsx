@@ -2,31 +2,18 @@
 import { memo, useMemo, type CSSProperties } from "react";
 import styled, { keyframes } from "styled-components";
 
-/* ============================================================
-   Props
-   ============================================================ */
 export interface VoxelLoaderProps {
-  /** Tamanho da aresta do cubo em px (padrão: 75) */
   size?: number;
-  /** Matiz HSL da cor principal, 0-360 (padrão: 176, ciano) */
   hue?: number;
-  /** Quantidade de partículas de fundo (padrão: 14) */
   particleCount?: number;
-  /** Quantidade de mini-voxels flutuantes (padrão: 6) */
   voxelCount?: number;
-  /** Texto acessível (e visível, se showLabel) */
   label?: string;
-  /** Mostra o texto abaixo do cubo */
   showLabel?: boolean;
-  /** Ocupa a tela inteira (padrão: true). Use false para um loader inline */
+
   fullscreen?: boolean;
   className?: string;
 }
 
-/* ============================================================
-   Geração procedural (valores viram CSS custom properties,
-   assim o styled-components não recria classes por partícula)
-   ============================================================ */
 const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
 const generateParticles = (count: number) =>
@@ -53,10 +40,6 @@ const generateMiniVoxels = (count: number) =>
     } as CSSProperties,
   }));
 
-/* ============================================================
-   Faces do cubo: transformação + sombreamento por face
-   (dá volume sem precisar de filter/blur)
-   ============================================================ */
 const FACES = [
   { t: "rotateY(0deg)", shade: "rgba(0,0,0,0)" }, // frente
   { t: "rotateY(90deg)", shade: "rgba(0,0,0,0.25)" }, // direita
@@ -66,9 +49,6 @@ const FACES = [
   { t: "rotateX(-90deg)", shade: "rgba(0,0,0,0.55)", bottom: true }, // base
 ] as const;
 
-/* ============================================================
-   Componente
-   ============================================================ */
 const VoxelLoader = ({
   size = 75,
   hue = 176,
@@ -130,9 +110,6 @@ const VoxelLoader = ({
   );
 };
 
-/* ============================================================
-   Animações
-   ============================================================ */
 const floatParticle = keyframes`
   0%   { transform: translate3d(0, 0, 0) scale(1);   opacity: 0; }
   20%  { opacity: 1; }
@@ -166,10 +143,6 @@ const blink = keyframes`
   50%      { opacity: 1; }
 `;
 
-/* ============================================================
-   Estilos
-   Tudo derivado de --size e --hue: mude as props e o resto acompanha.
-   ============================================================ */
 const StyledWrapper = styled.div<{ $fullscreen: boolean }>`
   --half: calc(var(--size) / 2);
   --accent: hsl(var(--hue) 100% 50%);
